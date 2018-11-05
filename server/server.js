@@ -7,7 +7,7 @@ let http = require('http');
 
 
 // Express config
-let port = 3000;
+let port = process.env.PORT || 3000;
 var app = express();
 
 // Socket.io config

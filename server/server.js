@@ -18,15 +18,29 @@ var io = socketIO(server);
 // User connected
 io.on('connection', (socket) => {
     console.log('New user connected'); 
+    
+    // A user join the server
+    socket.on('join', (userNickname) => {
+        console.log(`User ${userNickname} connected`);
+        
+        socket.broadcast.emit('userConnected', `${userNickname} has connected`);
+    });
+    
+    socket.on('newMessage', (message) => {
+
+        let msg = {
+            "from": message.from,
+            "text": message.text,
+            "createdAt": new Date().getTime()};
+
+        // Send to everyone the new message
+        io.emit('newText', msg);
+
+    });
+
     // User disconnected
     socket.on('disconnect', (reason) => {
       console.log('An user disconnected');
-    });
-
-    socket.on('join', (userNickname) => {
-        console.log(`User ${userNickname} connected`);
-
-        socket.broadcast.emit('userConnected', `${userNickname} has connected`);
     });
 });
  
